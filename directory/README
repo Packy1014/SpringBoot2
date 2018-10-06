@@ -1,0 +1,9 @@
+http://localhost:8080/test.js
+http://localhost:8080/css/css.css
+http://localhost:8080/js/js.js
+http://localhost:8080/image/86.jpg
+http://localhost:8080/index
+http://localhost:8080/config.js
+
+1.src/main/resources文件夹下同名文件默认加载顺序，可以在application.properties里修改
+META/resources -> resources -> static -> public
