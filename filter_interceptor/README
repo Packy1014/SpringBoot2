@@ -1,0 +1,6 @@
+1.filter
+http://localhost:8080/api/filter/login?username=packy
+2.listener
+http://localhost:8080/request_listener
+3.interceptor
+http://localhost:8080/api2/interceptor/logout?username=packy
