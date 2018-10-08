@@ -7,3 +7,7 @@ http://localhost:8080/config.js
 
 1.src/main/resources文件夹下同名文件默认加载顺序，可以在application.properties里修改
 META/resources -> resources -> static -> public
+2.使用spring-boot-devtools依赖可以进行热部署
+默认情况下，/META-INF/maven，/META-INF/resources，/resources，/static，/templates，/public
+这些文件夹下的文件修改不会使应用重启，但是会重新加载（devtools内嵌了一个LiveReload server，当资源发生改变时，浏览器刷新）
+idea配置如下：File-Settings-Compiler-Build Project automatically；ctrl + shift + alt + /,选择Registry,勾上 Compiler autoMake allow when app running
