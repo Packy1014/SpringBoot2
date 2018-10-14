@@ -1,0 +1,13 @@
+1.Redis安装
+wget http://download.redis.io/releases/redis-4.0.11.tar.gz
+tar xzf redis-4.0.11.tar.gz
+cd redis-4.0.11
+make
+cd src
+./redis-server
+2.默认是本地访问的，需要开放外网访问
+打开redis.conf文件在NETWORK部分修改。注释掉bind 127.0.0.1，修改protected-mode为no
+3.访问地址
+http://localhost:8080/api/redis/add/name/packy
+http://localhost:8080/api/redis/get/name
+http://localhost:8080/api/redis/delete/name
