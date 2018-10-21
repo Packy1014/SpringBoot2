@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <script type="text/javascript">
+        var source = new EventSource('sse/push_price');
+        source.onmessage = function (event) {
+            console.info(event.data);
+            document.getElementById('price').innerText = event.data
+        };
+    </script>
+</head>
+
+<body>
+模拟股票行情
+<div>SSE Test</div>
+<div id="price"></div>
+</body>
+</html>
