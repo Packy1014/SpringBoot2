@@ -1,0 +1,48 @@
+http://localhost:8080/active_mq/send_msg_to_queue?queueName=myqueue.queue&msg=mymsg
+http://localhost:8080/active_mq/send_msg_to_common_queue?msg=mymsg
+http://localhost:8080/rocket_mq/order?msg=hello&tag=t1
+
+1、默认消费者并不会消费订阅发布类型的消息，这是由于springboot默认采用的是p2p模式进行消息的监听
+修改配置：spring.jms.pub-sub-domain=true
+
+2、@JmsListener如果不指定独立的containerFactory的话是只能消费queue消息
+修改订阅者container：containerFactory="jmsListenerContainerTopic"
+//需要给topic定义独立的JmsListenerContainer
+@Bean
+public JmsListenerContainerFactory<?> jmsListenerContainerTopic(ConnectionFactory activeMQConnectionFactory) {
+    DefaultJmsListenerContainerFactory bean = new DefaultJmsListenerContainerFactory();
+    bean.setPubSubDomain(true);
+    bean.setConnectionFactory(activeMQConnectionFactory);
+    return bean;
+}
+在配置文件里面，注释掉 #spring.jms.pub-sub-domain=true
+
+3、解压压缩包
+    1)进入bin目录，启动namesrv
+         nohup sh mqnamesrv &
+
+    2) 查看日志 tail -f nohup.out
+    结尾：The Name Server boot success. serializeType=JSON 表示启动成功
+
+    3)、启动broker
+        nohup sh mqbroker -n 192.168.179.4:9876 autoCreateTopicEnable=true &
+
+    4)、关闭nameserver broker执行的命令
+        sh mqshutdown namesrv
+        sh mqshutdown broker
+
+4.“VM warning: INFO: OS::commit_memory(0x00000006c0000000, 2147483648, 0) faild; error=’Cannot allocate memory’ (errno=12)”
+修改/RocketMQ/devnev/bin/ 下的服务启动脚本 runserver.sh 、runbroker.sh 中对于内存的限制，​改成如下示例：
+JAVA_OPT="${JAVA_OPT} -server -Xms128m -Xmx128m -Xmn128m -XX:PermSize=128m -XX:MaxPermSize=128m"
+
+5.RoekerMQ4.x可视化控制台
+    1)、下载 https://github.com/apache/rocketmq-externals
+    2)、编译打包  mvn clean package -Dmaven.test.skip=true
+    3)、target目录 通过java -jar的方式运行
+
+    4)、无法连接获取broker信息
+        a.修改配置文件,名称路由地址为 namesrvAddr
+        b.src/main/resources/application.properties，需要重新编译
+            rocketmq.config.namesrvAddr=192.168.179.4:9876
+
+6.向RocketMQ发消息时，如果该topic为创建，则可能出现 No route info of this topic错误，autoCreateTopicEnable=true也不见得有效
